@@ -6,13 +6,5 @@ spring:
     password: Song0720!
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
-
-#spring.datasource.driver-class-name=com.mysql.jdbc.Driver
-#spring.datasource.url=jdbc:mysql://120.24.250.174:3306/test
-#spring.datasource.username=song
-#spring.datasource.password=Song0720!
-#
-#spring.jpa.show-sql= true
-#spring.jpa.hibernate.ddl-auto=create
