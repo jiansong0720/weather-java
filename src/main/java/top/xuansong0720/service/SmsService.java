@@ -1,4 +1,4 @@
-package top.xuansong0720.api;
+package top.xuansong0720.service;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
@@ -9,11 +9,10 @@ import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import org.apache.tools.ant.util.DateUtils;
-import org.junit.Test;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import top.xuansong0720.domain.Message;
+import top.xuansong0720.util.WeatherReportByCity;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,7 +32,7 @@ import java.util.Random;
  * 国际短信发送请勿参照此DEMO
  */
 @Component
-public class SmsDemo {
+public class SmsService {
 
     static final String product = "Dysmsapi";
     static final String domain = "dysmsapi.aliyuncs.com";
@@ -41,7 +40,6 @@ public class SmsDemo {
     static final String accessKeyId = "LTAIcgvAle37i8Yd";
     static final String accessKeySecret = "Y5jouIbGNDwr2dIRVBAgraCKVEl0Ej";
 
-    @Test
     public void tes() throws ClientException{
         sendSms();
     }
@@ -88,7 +86,6 @@ public class SmsDemo {
         //hint 此处可能会抛出异常，注意catch
         SendSmsResponse sendSmsResponse = acsClient.getAcsResponse(request);
 
-        System.out.println(DateUtils.format(new Date(),DateUtils.ISO8601_DATETIME_PATTERN)+request.getTemplateParam());
         return sendSmsResponse;
     }
 
@@ -121,6 +118,11 @@ public class SmsDemo {
         QuerySendDetailsResponse querySendDetailsResponse = acsClient.getAcsResponse(request);
 
         return querySendDetailsResponse;
+    }
+
+    public static void main(String[] args) {
+        Message message = WeatherReportByCity.GetTodayTemperatureByCity("成都");
+        System.out.println(message);
     }
 
 

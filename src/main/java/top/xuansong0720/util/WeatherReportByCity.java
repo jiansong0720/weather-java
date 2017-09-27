@@ -1,8 +1,8 @@
-package top.xuansong0720.api;
+package top.xuansong0720.util;
 
-import net.sf.json.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import top.xuansong0720.domain.Message;
-import top.xuansong0720.util.PureNetUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -37,17 +37,17 @@ public class WeatherReportByCity {
 
         String result = excute(city);
         if (result != null) {
-            JSONObject obj = JSONObject.fromObject(result);
+            JSONObject obj= JSON.parseObject(result);
             /*获取返回状态码*/
             result = obj.getString("resultcode");
             /*如果状态码是200说明返回数据成功*/
             if (result != null && result.equals("200")) {
                 result = obj.getString("result");
                 //此时result中数据有多个key,可以对其key进行遍历,得到对个属性
-                obj = JSONObject.fromObject(result);
+                obj = JSON.parseObject(result);
                 //今日温度对应的key是today
                 result = obj.getString("future");
-                obj = JSONObject.fromObject(result);
+                obj = JSON.parseObject(result);
 
                 //今日温度对应当key是temperature
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
@@ -56,7 +56,7 @@ public class WeatherReportByCity {
                   cal.add(Calendar.DAY_OF_MONTH, 1);
 
                 result= obj.getString("day_"+formatter.format(cal.getTime()));
-                obj = JSONObject.fromObject(result);
+                obj = JSON.parseObject(result);
 
                 String temperature = obj.getString("temperature");
                 String[] split = temperature.split("℃");
@@ -75,12 +75,6 @@ public class WeatherReportByCity {
             }
         }
         return null;
-    }
-
-    public static void main(String[] args) {
-
-        Message message = WeatherReportByCity.GetTodayTemperatureByCity("成都");
-        System.out.println(message.getTemperature()+message.getWeek()+message.getWeather());
     }
 
 }
