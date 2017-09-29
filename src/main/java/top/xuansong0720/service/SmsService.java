@@ -11,9 +11,11 @@ import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import top.xuansong0720.domain.Message;
+import top.xuansong0720.domain.Sms;
+import top.xuansong0720.repository.SmsRepository;
 import top.xuansong0720.util.WeatherReportByCity;
 
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -34,26 +36,25 @@ import java.util.Random;
 @Component
 public class SmsService {
 
-    static final String product = "Dysmsapi";
-    static final String domain = "dysmsapi.aliyuncs.com";
+    @Resource
+    private SmsRepository smsRepository;
 
-    static final String accessKeyId = "LTAIcgvAle37i8Yd";
-    static final String accessKeySecret = "Y5jouIbGNDwr2dIRVBAgraCKVEl0Ej";
+    static final String PRODUCT = "Dysmsapi";
+    static final String DOMAIN = "dysmsapi.aliyuncs.com";
 
-    public void tes() throws ClientException{
-        sendSms();
-    }
+    static final String ACCESSKEYID = "LTAIcgvAle37i8Yd";
+    static final String ACCESSKEYSECRET = "Y5jouIbGNDwr2dIRVBAgraCKVEl0Ej";
 
-    @Scheduled(cron = "0 00 22 * * ?")
-    public static SendSmsResponse sendSms() throws ClientException {
+    @Scheduled(cron = "0 14 22 * * ?")
+    public SendSmsResponse sendSms() throws ClientException {
 
         //可自助调整超时时间
         System.setProperty("sun.net.client.defaultConnectTimeout", "10000");
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
 
         //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
+        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", ACCESSKEYID, ACCESSKEYSECRET);
+        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", PRODUCT, DOMAIN);
         IAcsClient acsClient = new DefaultAcsClient(profile);
 
         //组装请求对象-具体描述见控制台-文档部分内容
@@ -67,14 +68,17 @@ public class SmsService {
         String templateCode = getTemplateCode();
         if ("SMS_84290015".equals(templateCode)) {
             request.setTemplateCode(templateCode);
-            Message message = WeatherReportByCity.GetTodayTemperatureByCity("成都");
+            Sms sms = WeatherReportByCity.GetTodayTemperatureByCity("成都");
+
+            smsRepository.save(sms);
             //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
-            request.setTemplateParam("{\"num\":\"" + "，不对是明天" + message.getTemperature() + "\", \"weather\":\"" + message.getWeather() + "\", \"dressing\":\"" + getDress() + "\"}");
+            request.setTemplateParam("{\"num\":\"" + "，不对是明天" + sms.getTemperature() + "\", \"weather\":\"" + sms.getWeather() + "\", \"dressing\":\"" + getDress() + "\"}");
         } else if ("SMS_85575004".equals(templateCode)) {
             request.setTemplateCode(templateCode);
-            Message message = WeatherReportByCity.GetTodayTemperatureByCity("成都");
+            Sms sms = WeatherReportByCity.GetTodayTemperatureByCity("成都");
+            smsRepository.save(sms);
             //可选:模板中的变量替换JSON串,如模板内容为"亲爱的${name},您的验证码为${code}"时,此处的值为
-            request.setTemplateParam("{\"num\":\"" + message.getTemperature() + "，" + message.getWeather() + "\"}");
+            request.setTemplateParam("{\"num\":\"" + sms.getTemperature() + "，" + sms.getWeather() + "\"}");
         }
 
         //选填-上行短信扩展码(无特殊需求用户请忽略此字段)
@@ -96,8 +100,8 @@ public class SmsService {
         System.setProperty("sun.net.client.defaultReadTimeout", "10000");
 
         //初始化acsClient,暂不支持region化
-        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", accessKeyId, accessKeySecret);
-        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", product, domain);
+        IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", ACCESSKEYID, ACCESSKEYSECRET);
+        DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", PRODUCT, DOMAIN);
         IAcsClient acsClient = new DefaultAcsClient(profile);
 
         //组装请求对象
@@ -121,8 +125,8 @@ public class SmsService {
     }
 
     public static void main(String[] args) {
-        Message message = WeatherReportByCity.GetTodayTemperatureByCity("成都");
-        System.out.println(message);
+        Sms sms = WeatherReportByCity.GetTodayTemperatureByCity("成都");
+        System.out.println(sms);
     }
 
 
@@ -132,7 +136,7 @@ public class SmsService {
 //        SendSmsResponse response = sendSms();
 //        System.out.println("短信接口返回的数据----------------");
 //        System.out.println("Code=" + response.getCode());
-//        System.out.println("Message=" + response.getMessage());
+//        System.out.println("Sms=" + response.getMessage());
 //        System.out.println("RequestId=" + response.getRequestId());
 //        System.out.println("BizId=" + response.getBizId());
 //
@@ -143,7 +147,7 @@ public class SmsService {
 //            QuerySendDetailsResponse querySendDetailsResponse = querySendDetails(response.getBizId());
 //            System.out.println("短信明细查询接口返回数据----------------");
 //            System.out.println("Code=" + querySendDetailsResponse.getCode());
-//            System.out.println("Message=" + querySendDetailsResponse.getMessage());
+//            System.out.println("Sms=" + querySendDetailsResponse.getMessage());
 //            int i = 0;
 //            for (QuerySendDetailsResponse.SmsSendDetailDTO smsSendDetailDTO : querySendDetailsResponse.getSmsSendDetailDTOs()) {
 //                System.out.println("SmsSendDetailDTO[" + i + "]:");

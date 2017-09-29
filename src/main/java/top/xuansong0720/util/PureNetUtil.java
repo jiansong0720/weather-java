@@ -1,6 +1,11 @@
 package top.xuansong0720.util;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Map;
@@ -28,7 +33,7 @@ public class PureNetUtil {
      * @param param 请求参数键值对
      * @return 返回读取数据
      */
-    public static String post(String url, Map<String,String> param) {
+    public static String post(String url, Map<String, String> param) {
         HttpURLConnection conn = null;
         try {
             URL u = new URL(url);
@@ -49,7 +54,7 @@ public class PureNetUtil {
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(out));
                 //将参数封装成键值对的形式
 
-                for (Map.Entry<String,String> s : param.entrySet()) {
+                for (Map.Entry<String, String> s : param.entrySet()) {
                     sb.append(s.getKey()).append("=").append(s.getValue()).append("&");
                 }
                 //将参数通过输出流写入
@@ -86,8 +91,9 @@ public class PureNetUtil {
             e.printStackTrace();
             return null;
         } finally {
-            if (conn != null)//关闭连接
+            if (conn != null) {
                 conn.disconnect();
+            }
         }
         return null;
     }

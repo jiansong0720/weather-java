@@ -2,6 +2,7 @@ package top.xuansong0720.domain;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,8 +12,9 @@ import javax.persistence.Id;
  * Created by song1993 on 2017/8/9.
  */
 @Entity
+@Data
 @ApiModel("天气实体")
-public class Message {
+public class Sms {
 
     @Id
     @GeneratedValue

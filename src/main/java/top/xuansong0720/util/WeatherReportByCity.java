@@ -2,7 +2,7 @@ package top.xuansong0720.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import top.xuansong0720.domain.Message;
+import top.xuansong0720.domain.Sms;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -23,7 +23,7 @@ public class WeatherReportByCity {
      * @return
      */
     public static String excute(String cityName) {
-        String url ="http://v.juhe.cn/weather/index?cityname=" + cityName + "&key=944e34fd992da62f5bec5287549bd695";
+        String url = "http://v.juhe.cn/weather/index?cityname=" + cityName + "&key=944e34fd992da62f5bec5287549bd695";
         return PureNetUtil.get(url);
     }
 
@@ -33,11 +33,10 @@ public class WeatherReportByCity {
      *
      * @return
      */
-    public static Message GetTodayTemperatureByCity(String city) {
-
+    public static Sms getTodayTemperatureByCity(String city) {
         String result = excute(city);
         if (result != null) {
-            JSONObject obj= JSON.parseObject(result);
+            JSONObject obj = JSON.parseObject(result);
             /*获取返回状态码*/
             result = obj.getString("resultcode");
             /*如果状态码是200说明返回数据成功*/
@@ -53,25 +52,25 @@ public class WeatherReportByCity {
                 SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
                 Calendar cal = new GregorianCalendar();
                 cal.setTime(new Date());
-                  cal.add(Calendar.DAY_OF_MONTH, 1);
+                cal.add(Calendar.DAY_OF_MONTH, 1);
 
-                result= obj.getString("day_"+formatter.format(cal.getTime()));
+                result = obj.getString("day_" + formatter.format(cal.getTime()));
                 obj = JSON.parseObject(result);
 
                 String temperature = obj.getString("temperature");
                 String[] split = temperature.split("℃");
 
-                StringBuffer sb=new StringBuffer();
+                StringBuffer sb = new StringBuffer();
                 for (String s : split) {
                     sb.append(s);
                 }
-                String week=obj.getString("week");
-                String weather=obj.getString("weather");
-                Message message=new Message();
-                message.setTemperature(sb.toString());
-                message.setWeek(week);
-                message.setWeather(weather);
-                return message;
+                String week = obj.getString("week");
+                String weather = obj.getString("weather");
+                Sms sms = new Sms();
+                sms.setTemperature(sb.toString());
+                sms.setWeek(week);
+                sms.setWeather(weather);
+                return sms;
             }
         }
         return null;
