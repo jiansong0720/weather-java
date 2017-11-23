@@ -1,12 +1,12 @@
-package top.xuansong0720.api;
+package ltd.api;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import ltd.domain.Message;
+import ltd.repository.MessageRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import top.xuansong0720.domain.Sms;
-import top.xuansong0720.repository.SmsRepository;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,12 +20,12 @@ import java.util.List;
 public class SmsController {
 
     @Resource
-    private SmsRepository smsRepository;
+    private MessageRepository messageRepository;
 
     @ApiOperation("获取短信历史列表")
     @GetMapping(value = "/list")
-    public List<Sms> list() {
-        return smsRepository.findAll();
+    public List<Message> list() {
+        return messageRepository.findAll();
     }
 
 }
