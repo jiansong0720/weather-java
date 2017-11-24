@@ -1,28 +1,28 @@
 package ltd.domain;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import ltd.domain.base.BaseDomain;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 import java.util.Date;
 
 @Entity
-@ApiModel("短信")
-public class Message {
+public class Message extends BaseDomain {
 
-    @Id
-    @GeneratedValue
-    @ApiModelProperty("id")
-    private Integer id;
-
-    @ApiModelProperty("属于哪个用户")
+    /**
+     * 用户
+     */
     @ManyToOne(optional = false)
     private Customer customer;
 
-    @ApiModelProperty("发送时间")
+    /**
+     * 发送时间
+     */
     private Date sendDate;
 
-    @ApiModelProperty("内容")
+    /**
+     * 发送内容
+     */
     private String content;
 
     public Customer getCustomer() {
@@ -31,14 +31,6 @@ public class Message {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public Date getSendDate() {
@@ -56,4 +48,5 @@ public class Message {
     public void setContent(String content) {
         this.content = content;
     }
+
 }

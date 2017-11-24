@@ -4,6 +4,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import ltd.domain.Message;
 import ltd.repository.MessageRepository;
+import ltd.service.webservice.MailService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,9 +17,11 @@ import java.util.List;
  */
 @RestController
 @RequestMapping("/sms")
-@Api(value = "短信")
+@Api(value = "短信", produces = "application/json")
 public class SmsController {
 
+    @Resource
+    private MailService mailService;
     @Resource
     private MessageRepository messageRepository;
 

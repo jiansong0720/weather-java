@@ -9,14 +9,23 @@ spring:
       ddl-auto: update
     show-sql: true
 
-
 message:
   product: Dysmsapi
   domain: dysmsapi.aliyuncs.com
   accessKeyId: LTAIcgvAle37i8Yd
   accessKeySecret: Y5jouIbGNDwr2dIRVBAgraCKVEl0Ej
+  signName: 简轩
+  templateCode: SMS_113455665
 
 weather:
   weatherurl: https://free-api.heweather.com/s6/weather/forecast
   username: HE1711221754351342
   userkey: 0da811880471468a96131cc1b5ca326c
+
+mail:
+  host: smtp.163.com
+  port: 25
+  userName: 18227624289@163.com
+  passWord: zhang0720
+  emailForm: 18227624289@163.com
+  personal: '简轩'

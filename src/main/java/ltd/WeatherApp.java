@@ -5,7 +5,9 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import ltd.config.MailConfig;
 import ltd.config.MessageConfig;
+import org.simplejavamail.mailer.Mailer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -40,7 +42,7 @@ public class WeatherApp {
                         .version("1.0")
                         .build())
                 .select()
-                .apis(RequestHandlerSelectors.basePackage("ltd.xuansong0720"))
+                .apis(RequestHandlerSelectors.basePackage("ltd"))
                 .paths(PathSelectors.any())
                 .build();
     }
@@ -57,6 +59,14 @@ public class WeatherApp {
         IClientProfile profile = DefaultProfile.getProfile("cn-hangzhou", messageConfig.getAccessKeyId(), messageConfig.getAccessKeySecret());
         DefaultProfile.addEndpoint("cn-hangzhou", "cn-hangzhou", messageConfig.getProduct(), messageConfig.getDomain());
         return new DefaultAcsClient(profile);
+    }
+
+    @Resource
+    private MailConfig mailConfig;
+
+    @Bean
+    public Mailer createMailer() {
+        return new Mailer(mailConfig.getHost(), mailConfig.getPort(), mailConfig.getUserName(), mailConfig.getPassWord());
     }
 
 }

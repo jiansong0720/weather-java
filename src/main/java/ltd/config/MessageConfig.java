@@ -17,6 +17,32 @@ public class MessageConfig {
     private String accessKeyId;
     private String accessKeySecret;
 
+    /**
+     * 短信签名
+     */
+    private String signName;
+
+    /**
+     * 短信模板code
+     */
+    private String templateCode;
+
+    public String getSignName() {
+        return signName;
+    }
+
+    public void setSignName(String signName) {
+        this.signName = signName;
+    }
+
+    public String getTemplateCode() {
+        return templateCode;
+    }
+
+    public void setTemplateCode(String templateCode) {
+        this.templateCode = templateCode;
+    }
+
     public String getProduct() {
         return product;
     }

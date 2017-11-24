@@ -41,7 +41,6 @@ public class HttpUtils {
                 params = temp_params.substring(0, temp_params.length() - 1);
             }
             String full_url = url + "?" + params;
-            System.out.println(full_url);
             // 创建URL对象
             java.net.URL connURL = new java.net.URL(full_url);
             // 打开URL连接
@@ -56,10 +55,6 @@ public class HttpUtils {
             httpConn.connect();
             // 响应头部获取
             Map<String, List<String>> headers = httpConn.getHeaderFields();
-            // 遍历所有的响应头字段
-            for (String key : headers.keySet()) {
-                System.out.println(key + "\t：\t" + headers.get(key));
-            }
             // 定义BufferedReader输入流来读取URL的响应,并设置编码方式
             in = new BufferedReader(new InputStreamReader(httpConn
                     .getInputStream(), "UTF-8"));

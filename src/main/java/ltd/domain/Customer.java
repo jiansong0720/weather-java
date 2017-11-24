@@ -1,8 +1,10 @@
 package ltd.domain;
 
-import io.swagger.annotations.ApiModelProperty;
+import ltd.domain.base.BaseDomain;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
 import java.util.List;
 
 /*
@@ -11,28 +13,24 @@ import java.util.List;
  * songshu 2017/11/23 15:19
  */
 @Entity
-public class Customer {
-
-    @Id
-    @GeneratedValue
-    @ApiModelProperty("id")
-    private Integer id;
-
-    @ApiModelProperty("用户姓名")
-    private String name;
-
-    @ApiModelProperty("用户电话")
-    private String phone;
-
-    @ApiModelProperty("查询地点")
-    private String location;
+public class Customer extends BaseDomain {
 
     /**
-     * 主控方：Message
-     * 被控方：Customer
-     * Customer相对于Message是被控方，只需在被控方写mappedBy,其值为主控方中引用的外键对象的名称。
+     * 用户姓名
      */
-    @ApiModelProperty("短信集合")
+    private String name;
+
+    /**
+     * 用户电话
+     */
+    private String phone;
+
+    /**
+     * 查询地点
+     */
+    @Column(nullable = false)
+    private String location;
+
     @OneToMany(mappedBy = "customer")
     private List<Message> list;
 
@@ -50,14 +48,6 @@ public class Customer {
 
     public void setList(List<Message> list) {
         this.list = list;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
