@@ -3,6 +3,7 @@ package ltd.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyuncs.dysmsapi.model.v20170525.SendSmsResponse;
+import ltd.api.response.MessageResponse;
 import ltd.domain.Customer;
 import ltd.domain.Message;
 import ltd.repository.CustomerRepository;
@@ -11,10 +12,11 @@ import ltd.service.webservice.MailService;
 import ltd.service.webservice.MessageWebService;
 import ltd.service.webservice.WeatherWebService;
 import org.apache.log4j.Logger;
-import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,7 @@ public class MessageService {
     @Resource
     private MessageWebService messageWebService;
 
-    @Scheduled(cron = "0 0 20 * * ?")
+//    @Scheduled(cron = "0 0 18 * * ?")
     public void sendMessage() {
         try {
             List<Customer> customerList = customerRepository.findAll();
@@ -54,7 +56,7 @@ public class MessageService {
                     message.setContent("Date:" + parse.get("date") + ",Weather:" + parse.get("tmp_min") + "~" + parse.get("tmp_max") + "℃.你若安好便是晴天.");
                     messageRepository.save(message);
                 } else {
-                    mailService.sendMail("天气","18227624289@qq.com","天气Error","天气短信发送失败");
+                    mailService.sendMail("天气", "18227624289@qq.com", "天气Error", "天气短信发送失败");
                     logger.error("短信发送失败");
                 }
             }
@@ -68,6 +70,19 @@ public class MessageService {
         Map HeWeather6 = JSONObject.parseObject(result.get("HeWeather6").get(0).toString(), Map.class);
         List dailyForecast = JSONObject.parseObject(HeWeather6.get("daily_forecast").toString(), List.class);
         return JSONObject.parseObject(dailyForecast.get(1).toString(), Map.class);
+    }
+
+    public List<MessageResponse> list() {
+        List<MessageResponse> messageResponseList = new ArrayList<MessageResponse>();
+        List<Message> messageList = messageRepository.findAll();
+        for (Message message : messageList) {
+            MessageResponse messageResponse = new MessageResponse();
+            BeanUtils.copyProperties(message, messageResponse);
+            messageResponse.setCustomerName(message.getCustomer().getName());
+            messageResponse.setCustomerPhone(message.getCustomer().getPhone());
+            messageResponseList.add(messageResponse);
+        }
+        return messageResponseList;
     }
 
 }
