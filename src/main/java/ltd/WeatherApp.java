@@ -22,6 +22,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import javax.annotation.Resource;
 
+
 @EnableScheduling
 @SpringBootApplication
 @EnableAutoConfiguration
